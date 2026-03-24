@@ -84,15 +84,19 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \Dedoc\Scramble\Scramble::configure()
+            ->withOperationTransformers(function (\Dedoc\Scramble\Support\Generator\Operation $operation) {
+                $operation->addParameters([
+                    (new \Dedoc\Scramble\Support\Generator\Parameter('X-Tenant', 'header'))
+                        ->setSchema(\Dedoc\Scramble\Support\Generator\Types\StringType::make())
+                        ->description('Slug del tenant (ej: demo)')
+                        ->required(true)
+                        ->example('demo'),
+                ]);
+            })
             ->withDocumentTransformers(function (\Dedoc\Scramble\Support\Generator\OpenApi $openApi) {
                 $openApi->secure(
                     \Dedoc\Scramble\Support\Generator\SecurityScheme::http('bearer', 'JWT')
                 );
-
-                // X-Tenant header parameter
-                $openApi->components->securitySchemes['tenant'] =
-                    \Dedoc\Scramble\Support\Generator\SecurityScheme::apiKey('header', 'X-Tenant')
-                        ->setDescription('Slug del tenant (ej: demo)');
             });
     }
 }
