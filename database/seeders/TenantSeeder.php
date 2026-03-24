@@ -170,19 +170,14 @@ class TenantSeeder extends Seeder
                 'empleado_id'   => $empleadoAdmin->id,
             ]);
 
-            // --- Admin user ---
-            // The users table lives in the public schema (central migration),
-            // so we force the central connection while inside tenant context.
-            $user = new User();
-            $user->setConnection('central');
-            $user->fill([
+            // --- Admin user (lives in tenant schema) ---
+            User::create([
                 'userable_type' => Empleado::class,
                 'userable_id'   => $empleadoAdmin->id,
                 'email'         => 'admin@gymdemo.com',
                 'password'      => Hash::make('password'),
                 'activo'        => true,
             ]);
-            $user->saveQuietly();
         });
 
         $this->command->info("Tenant '{$tenant->slug}' creado con schema '{$tenant->schema_name}'.");
