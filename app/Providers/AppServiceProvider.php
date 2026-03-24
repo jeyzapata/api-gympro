@@ -94,6 +94,11 @@ class AppServiceProvider extends ServiceProvider
 
         \Dedoc\Scramble\Scramble::configure()
             ->withOperationTransformers(function (\Dedoc\Scramble\Support\Generator\Operation $operation) {
+                // Solo agregar X-Tenant a rutas que NO son admin
+                if (str_contains($operation->path ?? '', '/admin/')) {
+                    return;
+                }
+
                 $type = (new \Dedoc\Scramble\Support\Generator\Types\StringType())->example('demo');
                 $schema = \Dedoc\Scramble\Support\Generator\Schema::fromType($type);
                 $parameter = new \Dedoc\Scramble\Support\Generator\Parameter('X-Tenant', 'header');
