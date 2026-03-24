@@ -14,6 +14,28 @@ Route::prefix('v1')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Admin routes (public schema — no tenant context)
+|--------------------------------------------------------------------------
+*/
+
+// Admin auth (public — no tenant, no auth)
+Route::prefix('v1/admin/auth')->group(function () {
+    Route::post('login', [\App\Http\Controllers\Api\V1\Admin\AdminAuthController::class, 'login'])
+        ->middleware('throttle:login');
+});
+
+// Admin protected (no tenant, auth:admin)
+Route::prefix('v1/admin')->middleware('auth:admin')->group(function () {
+    Route::get('auth/me', [\App\Http\Controllers\Api\V1\Admin\AdminAuthController::class, 'me']);
+    Route::post('auth/logout', [\App\Http\Controllers\Api\V1\Admin\AdminAuthController::class, 'logout']);
+    Route::apiResource('tenants', \App\Http\Controllers\Api\V1\Admin\AdminTenantController::class);
+    Route::apiResource('planes-plataforma', \App\Http\Controllers\Api\V1\Admin\PlanPlataformaController::class);
+    Route::apiResource('facturas', \App\Http\Controllers\Api\V1\Admin\FacturaTenantController::class);
+    Route::apiResource('pagos-plataforma', \App\Http\Controllers\Api\V1\Admin\PagoPlataformaController::class);
+});
+
+/*
+|--------------------------------------------------------------------------
 | Auth routes (require tenant context but NOT authentication)
 |--------------------------------------------------------------------------
 |

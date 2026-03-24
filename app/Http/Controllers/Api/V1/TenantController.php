@@ -21,7 +21,7 @@ final class TenantController extends Controller
         $perPage = min($request->integer('per_page', 15), 100);
 
         return TenantResource::collection(
-            $this->tenantService->getAll($perPage)
+            $this->tenantService->getAll($perPage, activeOnly: true)
         );
     }
 

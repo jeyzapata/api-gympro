@@ -10,9 +10,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class TenantRepository implements TenantRepositoryInterface
 {
-    public function all(int $perPage = 15): LengthAwarePaginator
+    public function all(int $perPage = 15, bool $activeOnly = false): LengthAwarePaginator
     {
-        return Tenant::where('suscripcion_activa', true)
+        return Tenant::when($activeOnly, fn ($q) => $q->where('suscripcion_activa', true))
             ->latest()
             ->paginate($perPage);
     }
@@ -20,5 +20,23 @@ final class TenantRepository implements TenantRepositoryInterface
     public function findOrFail(int $id): Tenant
     {
         return Tenant::findOrFail($id);
+    }
+
+    public function create(array $data): Tenant
+    {
+        return Tenant::create($data);
+    }
+
+    public function update(int $id, array $data): Tenant
+    {
+        $tenant = Tenant::findOrFail($id);
+        $tenant->update($data);
+
+        return $tenant->fresh();
+    }
+
+    public function delete(int $id): void
+    {
+        Tenant::findOrFail($id)->delete();
     }
 }

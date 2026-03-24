@@ -170,4 +170,14 @@ class Tenant extends Model implements TenantWithDatabase
     {
         return $this->hasMany(TenantSuscripcion::class);
     }
+
+    public function facturaTenants(): HasMany
+    {
+        return $this->hasMany(FacturaTenant::class);
+    }
+
+    public function pagoPlataformas(): HasMany
+    {
+        return $this->hasMany(PagoPlataforma::class);
+    }
 }

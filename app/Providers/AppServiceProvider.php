@@ -13,6 +13,12 @@ class AppServiceProvider extends ServiceProvider
         // Central
         $this->app->bind(\App\Repositories\Contracts\TenantRepositoryInterface::class, \App\Repositories\TenantRepository::class);
 
+        // Admin/Billing
+        $this->app->bind(\App\Repositories\Contracts\AdminUserRepositoryInterface::class, \App\Repositories\AdminUserRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\PlanPlataformaRepositoryInterface::class, \App\Repositories\PlanPlataformaRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\FacturaTenantRepositoryInterface::class, \App\Repositories\FacturaTenantRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\PagoPlataformaRepositoryInterface::class, \App\Repositories\PagoPlataformaRepository::class);
+
         // Core
         $this->app->bind(\App\Repositories\Contracts\SedeRepositoryInterface::class, \App\Repositories\SedeRepository::class);
         $this->app->bind(\App\Repositories\Contracts\EmpleadoRepositoryInterface::class, \App\Repositories\EmpleadoRepository::class);
