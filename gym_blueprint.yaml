@@ -1,0 +1,467 @@
+models:
+
+  # ═══════════════════════════════════════════════════════════
+  # SCHEMA: public (compartido entre todos los tenants)
+  # Estas tablas viven fuera del search_path del tenant.
+  # stancl/tenancy las marca con $centralConnection = 'pgsql'
+  # ═══════════════════════════════════════════════════════════
+
+  Tenant:
+    # Representa un gimnasio / empresa cliente
+    slug: string:80 unique                   # identificador URL-safe: "el-griego", "gym-norte"
+    nombre: string:150
+    email_admin: string:150 unique
+    telefono: string:30 nullable
+    logo: string nullable
+    schema_name: string:80 unique            # nombre del schema de Postgres: "gym_elgriego"
+    plan_suscripcion: enum:trial,basico,pro,enterprise default:trial
+    trial_ends_at: timestamp nullable
+    suscripcion_activa: boolean default:true
+    max_sedes: unsignedTinyInteger default:1
+    max_empleados: unsignedSmallInteger default:10
+    max_socios: unsignedSmallInteger default:200
+    datos_fiscales: json nullable            # CUIT, razon social, domicilio fiscal
+    timestamps: true
+    softDeletes: true
+
+  TenantSuscripcion:
+    # Historial de cambios de plan del tenant (para billing)
+    tenant_id: id foreign:tenants
+    plan_anterior: string:30 nullable
+    plan_nuevo: string:30
+    motivo: string:200 nullable
+    precio_mensual: decimal:10,2
+    activa_desde: date
+    activa_hasta: date nullable
+    timestamps: true
+
+  # ═══════════════════════════════════════════════════════════
+  # SCHEMA: gym_{slug} (por tenant — todo lo que sigue)
+  # stancl/tenancy setea search_path en cada request/job
+  # ═══════════════════════════════════════════════════════════
+
+  # ─────────────────────────────────────────────
+  # CORE: Multi-sede
+  # ─────────────────────────────────────────────
+  Sede:
+    nombre: string:120
+    direccion: string
+    ciudad: string:80
+    provincia: string:80
+    telefono: string:30 nullable
+    email: string:100 nullable
+    horario_apertura: time nullable
+    horario_cierre: time nullable
+    activa: boolean default:true
+    timestamps: true
+    softDeletes: true
+
+  # ─────────────────────────────────────────────
+  # PERSONAL
+  # ─────────────────────────────────────────────
+  Rol:
+    nombre: string:60 unique
+    descripcion: string nullable
+    permisos: json nullable                  # array de permisos granulares
+    timestamps: true
+
+  Empleado:
+    sede_id: id foreign:sedes
+    rol_id: id foreign:roles
+    nombre: string:100
+    apellido: string:100
+    dni: string:20 unique
+    email: string:150 unique
+    telefono: string:30 nullable
+    fecha_nacimiento: date nullable
+    fecha_ingreso: date
+    especialidades: json nullable
+    activo: boolean default:true
+    foto: string nullable
+    timestamps: true
+    softDeletes: true
+
+  HorarioEmpleado:
+    empleado_id: id foreign:empleados
+    dia_semana: tinyInteger                  # 1=lunes … 7=domingo
+    hora_entrada: time
+    hora_salida: time
+    timestamps: true
+
+  # ─────────────────────────────────────────────
+  # PLANES — catálogo y pricing
+  # ─────────────────────────────────────────────
+  Plan:
+    nombre: string:100
+    descripcion: text nullable
+    tipo: enum:fijo,pase_dia,clases_sueltas
+    duracion_dias: unsignedInteger nullable  # solo tipo fijo
+    cantidad_clases: unsignedInteger nullable # solo tipo clases_sueltas
+    permite_congelamiento: boolean default:false
+    max_dias_congelamiento: unsignedSmallInteger default:0
+    max_veces_congelamiento: unsignedTinyInteger default:0
+    permite_acceso_multisede: boolean default:false
+    activo: boolean default:true
+    orden_display: unsignedTinyInteger default:0  # orden en la UI
+    color_ui: string:7 nullable              # hex para cards del plan
+    timestamps: true
+    softDeletes: true
+
+  PlanPrecio:
+    # Historial de precios por plan — nunca se pisa el precio viejo
+    # Permite auditoría y calcular membresías firmadas al precio de su época
+    plan_id: id foreign:planes
+    sede_id: id foreign:sedes nullable       # null = precio global del plan
+    precio: decimal:10,2
+    precio_matricula: decimal:10,2 default:0 # cargo de inscripción
+    moneda: string:3 default:ARS
+    vigente_desde: date
+    vigente_hasta: date nullable             # null = precio actual
+    motivo_cambio: string:200 nullable
+    empleado_id: id foreign:empleados        # quien registró el cambio
+    timestamps: true
+
+  PlanBeneficio:
+    # Beneficios/features asociados a un plan (para mostrar en pricing cards)
+    plan_id: id foreign:planes
+    descripcion: string:200
+    incluido: boolean default:true           # false = tachado en la UI (no disponible)
+    orden: unsignedTinyInteger default:0
+    timestamps: true
+
+  Promocion:
+    # Descuentos y promos aplicables al momento del pago
+    codigo: string:50 unique nullable        # null = promo sin código (automática)
+    nombre: string:150
+    descripcion: text nullable
+    tipo_descuento: enum:porcentaje,monto_fijo,meses_gratis
+    valor: decimal:10,2                      # % o monto o cantidad de meses
+    aplica_a: enum:todos,plan_especifico,primera_membresia
+    plan_id: id foreign:planes nullable      # solo si aplica_a = plan_especifico
+    sede_id: id foreign:sedes nullable       # null = aplica en todas las sedes
+    usos_maximos: unsignedInteger nullable   # null = sin límite
+    usos_actuales: unsignedInteger default:0
+    un_uso_por_socio: boolean default:true
+    vigente_desde: datetime
+    vigente_hasta: datetime nullable
+    activa: boolean default:true
+    timestamps: true
+    softDeletes: true
+
+  # ─────────────────────────────────────────────
+  # SOCIOS
+  # ─────────────────────────────────────────────
+  Socio:
+    sede_id: id foreign:sedes
+    nombre: string:100
+    apellido: string:100
+    dni: string:20 unique
+    email: string:150 unique
+    telefono: string:30 nullable
+    fecha_nacimiento: date nullable
+    sexo: enum:masculino,femenino,otro nullable
+    direccion: string nullable
+    foto: string nullable
+    numero_socio: string:30 unique
+    referido_por_id: unsignedBigInteger nullable  # self-ref: otro socio
+    activo: boolean default:true
+    timestamps: true
+    softDeletes: true
+
+  Membresia:
+    socio_id: id foreign:socios
+    plan_id: id foreign:planes
+    plan_precio_id: id foreign:plan_precios  # precio al que se contrató
+    sede_id: id foreign:sedes
+    fecha_inicio: date
+    fecha_fin: date nullable
+    clases_restantes: unsignedInteger nullable
+    estado: enum:activa,vencida,congelada,cancelada,pendiente_pago default:activa
+    fecha_congelamiento: date nullable
+    fecha_descongelamiento: date nullable
+    dias_congelados_usados: unsignedSmallInteger default:0
+    veces_congelado: unsignedTinyInteger default:0
+    auto_renovar: boolean default:false
+    notas: text nullable
+    timestamps: true
+
+  # ─────────────────────────────────────────────
+  # PAGOS / CAJA — expandido
+  # ─────────────────────────────────────────────
+  MetodoPago:
+    nombre: string:60 unique                 # efectivo, transferencia, tarjeta, mercadopago, etc.
+    tipo: enum:efectivo,digital,tarjeta,otro
+    requiere_referencia: boolean default:false  # si debe ingresar nro de comprobante externo
+    activo: boolean default:true
+    timestamps: true
+
+  Pago:
+    membresia_id: id foreign:membresias nullable
+    socio_id: id foreign:socios
+    sede_id: id foreign:sedes
+    empleado_id: id foreign:empleados        # cajero que registró
+    metodo_pago_id: id foreign:metodo_pagos
+    promocion_id: id foreign:promociones nullable
+    # Montos
+    monto_bruto: decimal:10,2               # precio sin descuentos
+    monto_descuento: decimal:10,2 default:0
+    monto_matricula: decimal:10,2 default:0
+    monto_final: decimal:10,2               # lo que realmente pagó
+    moneda: string:3 default:ARS
+    # Cuotas
+    es_pago_parcial: boolean default:false
+    cuota_numero: unsignedTinyInteger nullable   # ej: 1 de 3
+    cuota_total: unsignedTinyInteger nullable    # ej: 3
+    # Identificación
+    concepto: string:200
+    numero_comprobante: string:80 nullable   # comprobante interno
+    referencia_externa: string:150 nullable  # id de MP, id de transferencia, etc.
+    # Estado
+    estado: enum:pendiente,pagado,anulado,reembolsado default:pagado
+    fecha_pago: datetime
+    fecha_vencimiento: date nullable         # para pagos pendientes
+    # Auditoría
+    anulado_por_id: unsignedBigInteger nullable  # empleado que anuló
+    motivo_anulacion: string:200 nullable
+    notas: text nullable
+    timestamps: true
+
+  PagoItem:
+    # Detalle de qué se pagó (útil para pagos con varios conceptos)
+    pago_id: id foreign:pagos
+    descripcion: string:200
+    cantidad: unsignedSmallInteger default:1
+    precio_unitario: decimal:10,2
+    subtotal: decimal:10,2
+    timestamps: true
+
+  Deuda:
+    # Saldos pendientes de un socio — generados automáticamente
+    socio_id: id foreign:socios
+    membresia_id: id foreign:membresias nullable
+    sede_id: id foreign:sedes
+    concepto: string:200
+    monto: decimal:10,2
+    fecha_generacion: date
+    fecha_vencimiento: date nullable
+    estado: enum:pendiente,pagada,anulada default:pendiente
+    pago_id: id foreign:pagos nullable       # cuando se salda
+    timestamps: true
+
+  Caja:
+    sede_id: id foreign:sedes
+    empleado_id: id foreign:empleados
+    fecha_apertura: datetime
+    monto_apertura: decimal:10,2 default:0
+    fecha_cierre: datetime nullable
+    monto_cierre_real: decimal:10,2 nullable     # lo que había físicamente
+    monto_cierre_sistema: decimal:10,2 nullable  # lo que dice el sistema
+    diferencia: decimal:10,2 nullable
+    estado: enum:abierta,cerrada default:abierta
+    observaciones: text nullable
+    timestamps: true
+
+  MovimientoCaja:
+    caja_id: id foreign:cajas
+    pago_id: id foreign:pagos nullable
+    tipo: enum:ingreso,egreso,ajuste
+    monto: decimal:10,2
+    concepto: string:200
+    empleado_id: id foreign:empleados
+    timestamps: true
+
+  # ─────────────────────────────────────────────
+  # CLASES Y TURNOS
+  # ─────────────────────────────────────────────
+  TipoClase:
+    nombre: string:100
+    descripcion: text nullable
+    duracion_minutos: unsignedSmallInteger default:60
+    capacidad_maxima: unsignedSmallInteger
+    color: string:7 nullable
+    activo: boolean default:true
+    timestamps: true
+
+  Clase:
+    sede_id: id foreign:sedes
+    tipo_clase_id: id foreign:tipo_clases
+    empleado_id: id foreign:empleados
+    nombre: string:150
+    descripcion: text nullable
+    dia_semana: tinyInteger nullable
+    hora_inicio: time
+    hora_fin: time
+    capacidad_maxima: unsignedSmallInteger
+    es_recurrente: boolean default:true
+    fecha_inicio_vigencia: date nullable
+    fecha_fin_vigencia: date nullable
+    activa: boolean default:true
+    timestamps: true
+    softDeletes: true
+
+  TurnoClase:
+    clase_id: id foreign:clases
+    fecha: date
+    hora_inicio: time
+    hora_fin: time
+    instructor_id: id foreign:empleados nullable
+    estado: enum:programado,en_curso,finalizado,cancelado default:programado
+    capacidad_maxima: unsignedSmallInteger nullable
+    notas: text nullable
+    timestamps: true
+
+  Reserva:
+    turno_clase_id: id foreign:turno_clases
+    socio_id: id foreign:socios
+    membresia_id: id foreign:membresias nullable
+    estado: enum:reservada,confirmada,asistio,ausente,cancelada default:reservada
+    fecha_reserva: datetime
+    fecha_cancelacion: datetime nullable
+    timestamps: true
+
+  Asistencia:
+    socio_id: id foreign:socios
+    sede_id: id foreign:sedes
+    turno_clase_id: id foreign:turno_clases nullable
+    membresia_id: id foreign:membresias nullable
+    fecha_hora_ingreso: datetime
+    fecha_hora_egreso: datetime nullable
+    tipo: enum:clase,acceso_libre
+    timestamps: true
+
+  # ─────────────────────────────────────────────
+  # EQUIPAMIENTO
+  # ─────────────────────────────────────────────
+  CategoriaEquipo:
+    nombre: string:80 unique
+    descripcion: string nullable
+    timestamps: true
+
+  Equipo:
+    sede_id: id foreign:sedes
+    categoria_equipo_id: id foreign:categoria_equipos
+    nombre: string:150
+    marca: string:80 nullable
+    modelo: string:80 nullable
+    numero_serie: string:100 nullable unique
+    fecha_adquisicion: date nullable
+    valor_adquisicion: decimal:10,2 nullable
+    estado: enum:operativo,en_mantenimiento,fuera_de_servicio,dado_de_baja default:operativo
+    ubicacion: string:100 nullable
+    foto: string nullable
+    notas: text nullable
+    timestamps: true
+    softDeletes: true
+
+  Mantenimiento:
+    equipo_id: id foreign:equipos
+    empleado_id: id foreign:empleados nullable
+    tipo: enum:preventivo,correctivo,revision
+    descripcion: text
+    fecha_programada: date
+    fecha_realizado: date nullable
+    costo: decimal:10,2 nullable
+    proveedor: string:150 nullable
+    estado: enum:programado,en_progreso,completado,cancelado default:programado
+    proxima_revision: date nullable
+    timestamps: true
+
+  # ─────────────────────────────────────────────
+  # NUTRICIÓN
+  # ─────────────────────────────────────────────
+  Alimento:
+    nombre: string:150
+    calorias_por_100g: decimal:7,2 nullable
+    proteinas_por_100g: decimal:7,2 nullable
+    carbohidratos_por_100g: decimal:7,2 nullable
+    grasas_por_100g: decimal:7,2 nullable
+    fibra_por_100g: decimal:7,2 nullable
+    timestamps: true
+
+  PlanNutricional:
+    socio_id: id foreign:socios
+    empleado_id: id foreign:empleados
+    nombre: string:150
+    objetivo: enum:perdida_peso,ganancia_muscular,mantenimiento,rendimiento,otro
+    descripcion: text nullable
+    fecha_inicio: date
+    fecha_fin: date nullable
+    activo: boolean default:true
+    timestamps: true
+
+  ComidaDiaria:
+    plan_nutricional_id: id foreign:plan_nutricionales
+    dia_semana: tinyInteger
+    tipo_comida: enum:desayuno,almuerzo,merienda,cena,colacion
+    hora_sugerida: time nullable
+    notas: text nullable
+    timestamps: true
+
+  ComidaAlimento:
+    comida_diaria_id: id foreign:comida_diarias
+    alimento_id: id foreign:alimentos
+    cantidad_gramos: decimal:7,2
+    timestamps: true
+
+  MedicionSocio:
+    socio_id: id foreign:socios
+    empleado_id: id foreign:empleados nullable
+    fecha: date
+    peso_kg: decimal:5,2 nullable
+    altura_cm: decimal:5,2 nullable
+    imc: decimal:4,2 nullable
+    porcentaje_grasa: decimal:5,2 nullable
+    masa_muscular_kg: decimal:5,2 nullable
+    cintura_cm: decimal:5,2 nullable
+    cadera_cm: decimal:5,2 nullable
+    pecho_cm: decimal:5,2 nullable
+    notas: text nullable
+    timestamps: true
+
+  # ─────────────────────────────────────────────
+  # APP MÓVIL / USUARIOS
+  # ─────────────────────────────────────────────
+  User:
+    userable_type: string                    # morphs: Socio o Empleado
+    userable_id: unsignedBigInteger
+    email: string:150 unique
+    password: string
+    email_verified_at: timestamp nullable
+    push_token: string nullable
+    ultimo_login: datetime nullable
+    activo: boolean default:true
+    rememberToken: true
+    timestamps: true
+
+  Notificacion:
+    user_id: id foreign:users
+    titulo: string:150
+    cuerpo: text
+    tipo: enum:membresia,pago,clase,mantenimiento,promocion,general
+    leida: boolean default:false
+    leida_at: datetime nullable
+    data: json nullable
+    timestamps: true
+
+controllers:
+  Tenant: resource
+  Sede: resource
+  Empleado: resource
+  Plan: resource
+  PlanPrecio: resource
+  PlanBeneficio: resource
+  Promocion: resource
+  Socio: resource
+  Membresia: resource
+  Pago: resource
+  Deuda: resource
+  Caja: resource
+  Clase: resource
+  TurnoClase: resource
+  Reserva: resource
+  Asistencia: resource
+  Equipo: resource
+  Mantenimiento: resource
+  PlanNutricional: resource
+  MedicionSocio: resource
+  Notificacion: resource

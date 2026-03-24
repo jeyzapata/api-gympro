@@ -1,0 +1,262 @@
+created:
+    - app/Http/Controllers/TenantController.php
+    - app/Http/Controllers/SedeController.php
+    - app/Http/Controllers/EmpleadoController.php
+    - app/Http/Controllers/PlanController.php
+    - app/Http/Controllers/PlanPrecioController.php
+    - app/Http/Controllers/PlanBeneficioController.php
+    - app/Http/Controllers/PromocionController.php
+    - app/Http/Controllers/SocioController.php
+    - app/Http/Controllers/MembresiaController.php
+    - app/Http/Controllers/PagoController.php
+    - app/Http/Controllers/DeudaController.php
+    - app/Http/Controllers/CajaController.php
+    - app/Http/Controllers/ClaseController.php
+    - app/Http/Controllers/TurnoClaseController.php
+    - app/Http/Controllers/ReservaController.php
+    - app/Http/Controllers/AsistenciaController.php
+    - app/Http/Controllers/EquipoController.php
+    - app/Http/Controllers/MantenimientoController.php
+    - app/Http/Controllers/PlanNutricionalController.php
+    - app/Http/Controllers/MedicionSocioController.php
+    - app/Http/Controllers/NotificacionController.php
+    - database/factories/TenantFactory.php
+    - database/factories/TenantSuscripcionFactory.php
+    - database/factories/SedeFactory.php
+    - database/factories/RolFactory.php
+    - database/factories/EmpleadoFactory.php
+    - database/factories/HorarioEmpleadoFactory.php
+    - database/factories/PlanFactory.php
+    - database/factories/PlanPrecioFactory.php
+    - database/factories/PlanBeneficioFactory.php
+    - database/factories/PromocionFactory.php
+    - database/factories/SocioFactory.php
+    - database/factories/MembresiaFactory.php
+    - database/factories/MetodoPagoFactory.php
+    - database/factories/PagoFactory.php
+    - database/factories/PagoItemFactory.php
+    - database/factories/DeudaFactory.php
+    - database/factories/CajaFactory.php
+    - database/factories/MovimientoCajaFactory.php
+    - database/factories/TipoClaseFactory.php
+    - database/factories/ClaseFactory.php
+    - database/factories/TurnoClaseFactory.php
+    - database/factories/ReservaFactory.php
+    - database/factories/AsistenciaFactory.php
+    - database/factories/CategoriaEquipoFactory.php
+    - database/factories/EquipoFactory.php
+    - database/factories/MantenimientoFactory.php
+    - database/factories/AlimentoFactory.php
+    - database/factories/PlanNutricionalFactory.php
+    - database/factories/ComidaDiariaFactory.php
+    - database/factories/ComidaAlimentoFactory.php
+    - database/factories/MedicionSocioFactory.php
+    - database/factories/UserFactory.php
+    - database/factories/NotificacionFactory.php
+    - database/migrations/2026_03_24_200646_create_tenants_table.php
+    - database/migrations/2026_03_24_200647_create_tenant_suscripcions_table.php
+    - database/migrations/2026_03_24_200648_create_sedes_table.php
+    - database/migrations/2026_03_24_200649_create_rols_table.php
+    - database/migrations/2026_03_24_200650_create_empleados_table.php
+    - database/migrations/2026_03_24_200651_create_horario_empleados_table.php
+    - database/migrations/2026_03_24_200652_create_plans_table.php
+    - database/migrations/2026_03_24_200653_create_plan_precios_table.php
+    - database/migrations/2026_03_24_200654_create_plan_beneficios_table.php
+    - database/migrations/2026_03_24_200655_create_promocions_table.php
+    - database/migrations/2026_03_24_200656_create_socios_table.php
+    - database/migrations/2026_03_24_200657_create_membresias_table.php
+    - database/migrations/2026_03_24_200658_create_metodo_pagos_table.php
+    - database/migrations/2026_03_24_200659_create_pagos_table.php
+    - database/migrations/2026_03_24_200700_create_pago_items_table.php
+    - database/migrations/2026_03_24_200701_create_deudas_table.php
+    - database/migrations/2026_03_24_200702_create_cajas_table.php
+    - database/migrations/2026_03_24_200703_create_movimiento_cajas_table.php
+    - database/migrations/2026_03_24_200704_create_tipo_clases_table.php
+    - database/migrations/2026_03_24_200705_create_clases_table.php
+    - database/migrations/2026_03_24_200706_create_turno_clases_table.php
+    - database/migrations/2026_03_24_200707_create_reservas_table.php
+    - database/migrations/2026_03_24_200708_create_asistencias_table.php
+    - database/migrations/2026_03_24_200709_create_categoria_equipos_table.php
+    - database/migrations/2026_03_24_200710_create_equipos_table.php
+    - database/migrations/2026_03_24_200711_create_mantenimientos_table.php
+    - database/migrations/2026_03_24_200712_create_alimentos_table.php
+    - database/migrations/2026_03_24_200713_create_plan_nutricionals_table.php
+    - database/migrations/2026_03_24_200714_create_comida_diarias_table.php
+    - database/migrations/2026_03_24_200715_create_comida_alimentos_table.php
+    - database/migrations/2026_03_24_200716_create_medicion_socios_table.php
+    - database/migrations/2026_03_24_200717_create_users_table.php
+    - database/migrations/2026_03_24_200718_create_notificacions_table.php
+    - app/Models/Tenant.php
+    - app/Models/TenantSuscripcion.php
+    - app/Models/Sede.php
+    - app/Models/Rol.php
+    - app/Models/Empleado.php
+    - app/Models/HorarioEmpleado.php
+    - app/Models/Plan.php
+    - app/Models/PlanPrecio.php
+    - app/Models/PlanBeneficio.php
+    - app/Models/Promocion.php
+    - app/Models/Socio.php
+    - app/Models/Membresia.php
+    - app/Models/MetodoPago.php
+    - app/Models/Pago.php
+    - app/Models/PagoItem.php
+    - app/Models/Deuda.php
+    - app/Models/Caja.php
+    - app/Models/MovimientoCaja.php
+    - app/Models/TipoClase.php
+    - app/Models/Clase.php
+    - app/Models/TurnoClase.php
+    - app/Models/Reserva.php
+    - app/Models/Asistencia.php
+    - app/Models/CategoriaEquipo.php
+    - app/Models/Equipo.php
+    - app/Models/Mantenimiento.php
+    - app/Models/Alimento.php
+    - app/Models/PlanNutricional.php
+    - app/Models/ComidaDiaria.php
+    - app/Models/ComidaAlimento.php
+    - app/Models/MedicionSocio.php
+    - app/Models/User.php
+    - app/Models/Notificacion.php
+    - tests/Feature/Http/Controllers/TenantControllerTest.php
+    - tests/Feature/Http/Controllers/SedeControllerTest.php
+    - tests/Feature/Http/Controllers/EmpleadoControllerTest.php
+    - tests/Feature/Http/Controllers/PlanControllerTest.php
+    - tests/Feature/Http/Controllers/PlanPrecioControllerTest.php
+    - tests/Feature/Http/Controllers/PlanBeneficioControllerTest.php
+    - tests/Feature/Http/Controllers/PromocionControllerTest.php
+    - tests/Feature/Http/Controllers/SocioControllerTest.php
+    - tests/Feature/Http/Controllers/MembresiaControllerTest.php
+    - tests/Feature/Http/Controllers/PagoControllerTest.php
+    - tests/Feature/Http/Controllers/DeudaControllerTest.php
+    - tests/Feature/Http/Controllers/CajaControllerTest.php
+    - tests/Feature/Http/Controllers/ClaseControllerTest.php
+    - tests/Feature/Http/Controllers/TurnoClaseControllerTest.php
+    - tests/Feature/Http/Controllers/ReservaControllerTest.php
+    - tests/Feature/Http/Controllers/AsistenciaControllerTest.php
+    - tests/Feature/Http/Controllers/EquipoControllerTest.php
+    - tests/Feature/Http/Controllers/MantenimientoControllerTest.php
+    - tests/Feature/Http/Controllers/PlanNutricionalControllerTest.php
+    - tests/Feature/Http/Controllers/MedicionSocioControllerTest.php
+    - tests/Feature/Http/Controllers/NotificacionControllerTest.php
+    - app/Http/Requests/TenantStoreRequest.php
+    - app/Http/Requests/TenantUpdateRequest.php
+    - app/Http/Requests/SedeStoreRequest.php
+    - app/Http/Requests/SedeUpdateRequest.php
+    - app/Http/Requests/EmpleadoStoreRequest.php
+    - app/Http/Requests/EmpleadoUpdateRequest.php
+    - app/Http/Requests/PlanStoreRequest.php
+    - app/Http/Requests/PlanUpdateRequest.php
+    - app/Http/Requests/PlanPrecioStoreRequest.php
+    - app/Http/Requests/PlanPrecioUpdateRequest.php
+    - app/Http/Requests/PlanBeneficioStoreRequest.php
+    - app/Http/Requests/PlanBeneficioUpdateRequest.php
+    - app/Http/Requests/PromocionStoreRequest.php
+    - app/Http/Requests/PromocionUpdateRequest.php
+    - app/Http/Requests/SocioStoreRequest.php
+    - app/Http/Requests/SocioUpdateRequest.php
+    - app/Http/Requests/MembresiumStoreRequest.php
+    - app/Http/Requests/MembresiumUpdateRequest.php
+    - app/Http/Requests/PagoStoreRequest.php
+    - app/Http/Requests/PagoUpdateRequest.php
+    - app/Http/Requests/DeudaStoreRequest.php
+    - app/Http/Requests/DeudaUpdateRequest.php
+    - app/Http/Requests/CajaStoreRequest.php
+    - app/Http/Requests/CajaUpdateRequest.php
+    - app/Http/Requests/ClaseStoreRequest.php
+    - app/Http/Requests/ClaseUpdateRequest.php
+    - app/Http/Requests/TurnoClaseStoreRequest.php
+    - app/Http/Requests/TurnoClaseUpdateRequest.php
+    - app/Http/Requests/ReservaStoreRequest.php
+    - app/Http/Requests/ReservaUpdateRequest.php
+    - app/Http/Requests/AsistenciumStoreRequest.php
+    - app/Http/Requests/AsistenciumUpdateRequest.php
+    - app/Http/Requests/EquipoStoreRequest.php
+    - app/Http/Requests/EquipoUpdateRequest.php
+    - app/Http/Requests/MantenimientoStoreRequest.php
+    - app/Http/Requests/MantenimientoUpdateRequest.php
+    - app/Http/Requests/PlanNutricionalStoreRequest.php
+    - app/Http/Requests/PlanNutricionalUpdateRequest.php
+    - app/Http/Requests/MedicionSocioStoreRequest.php
+    - app/Http/Requests/MedicionSocioUpdateRequest.php
+    - app/Http/Requests/NotificacionStoreRequest.php
+    - app/Http/Requests/NotificacionUpdateRequest.php
+    - app/Http/Resources/TenantCollection.php
+    - app/Http/Resources/TenantResource.php
+    - app/Http/Resources/SedeCollection.php
+    - app/Http/Resources/SedeResource.php
+    - app/Http/Resources/EmpleadoCollection.php
+    - app/Http/Resources/EmpleadoResource.php
+    - app/Http/Resources/PlanCollection.php
+    - app/Http/Resources/PlanResource.php
+    - app/Http/Resources/PlanPrecioCollection.php
+    - app/Http/Resources/PlanPrecioResource.php
+    - app/Http/Resources/PlanBeneficioCollection.php
+    - app/Http/Resources/PlanBeneficioResource.php
+    - app/Http/Resources/PromocionCollection.php
+    - app/Http/Resources/PromocionResource.php
+    - app/Http/Resources/SocioCollection.php
+    - app/Http/Resources/SocioResource.php
+    - app/Http/Resources/MembresiumCollection.php
+    - app/Http/Resources/MembresiumResource.php
+    - app/Http/Resources/PagoCollection.php
+    - app/Http/Resources/PagoResource.php
+    - app/Http/Resources/DeudaCollection.php
+    - app/Http/Resources/DeudaResource.php
+    - app/Http/Resources/CajaCollection.php
+    - app/Http/Resources/CajaResource.php
+    - app/Http/Resources/ClaseCollection.php
+    - app/Http/Resources/ClaseResource.php
+    - app/Http/Resources/TurnoClaseCollection.php
+    - app/Http/Resources/TurnoClaseResource.php
+    - app/Http/Resources/ReservaCollection.php
+    - app/Http/Resources/ReservaResource.php
+    - app/Http/Resources/AsistenciumCollection.php
+    - app/Http/Resources/AsistenciumResource.php
+    - app/Http/Resources/EquipoCollection.php
+    - app/Http/Resources/EquipoResource.php
+    - app/Http/Resources/MantenimientoCollection.php
+    - app/Http/Resources/MantenimientoResource.php
+    - app/Http/Resources/PlanNutricionalCollection.php
+    - app/Http/Resources/PlanNutricionalResource.php
+    - app/Http/Resources/MedicionSocioCollection.php
+    - app/Http/Resources/MedicionSocioResource.php
+    - app/Http/Resources/NotificacionCollection.php
+    - app/Http/Resources/NotificacionResource.php
+updated:
+    - routes/api.php
+models:
+    Tenant: { slug: 'string:80 unique', nombre: 'string:150', email_admin: 'string:150 unique', telefono: 'string:30 nullable', logo: 'string nullable', schema_name: 'string:80 unique', plan_suscripcion: 'enum:trial,basico,pro,enterprise default:trial', trial_ends_at: 'timestamp nullable', suscripcion_activa: 'boolean default:true', max_sedes: 'unsignedTinyInteger default:1', max_empleados: 'unsignedSmallInteger default:10', max_socios: 'unsignedSmallInteger default:200', datos_fiscales: 'json nullable', timestamps: timestamps, softdeletes: softDeletes }
+    TenantSuscripcion: { tenant_id: 'id foreign:tenants', plan_anterior: 'string:30 nullable', plan_nuevo: 'string:30', motivo: 'string:200 nullable', precio_mensual: 'decimal:10,2', activa_desde: date, activa_hasta: 'date nullable', timestamps: timestamps }
+    Sede: { nombre: 'string:120', direccion: string, ciudad: 'string:80', provincia: 'string:80', telefono: 'string:30 nullable', email: 'string:100 nullable', horario_apertura: 'time nullable', horario_cierre: 'time nullable', activa: 'boolean default:true', timestamps: timestamps, softdeletes: softDeletes }
+    Rol: { nombre: 'string:60 unique', descripcion: 'string nullable', permisos: 'json nullable', timestamps: timestamps }
+    Empleado: { sede_id: 'id foreign:sedes', rol_id: 'id foreign:roles', nombre: 'string:100', apellido: 'string:100', dni: 'string:20 unique', email: 'string:150 unique', telefono: 'string:30 nullable', fecha_nacimiento: 'date nullable', fecha_ingreso: date, especialidades: 'json nullable', activo: 'boolean default:true', foto: 'string nullable', timestamps: timestamps, softdeletes: softDeletes }
+    HorarioEmpleado: { empleado_id: 'id foreign:empleados', dia_semana: tinyInteger, hora_entrada: time, hora_salida: time, timestamps: timestamps }
+    Plan: { nombre: 'string:100', descripcion: 'text nullable', tipo: 'enum:fijo,pase_dia,clases_sueltas', duracion_dias: 'unsignedInteger nullable', cantidad_clases: 'unsignedInteger nullable', permite_congelamiento: 'boolean default:false', max_dias_congelamiento: 'unsignedSmallInteger default:0', max_veces_congelamiento: 'unsignedTinyInteger default:0', permite_acceso_multisede: 'boolean default:false', activo: 'boolean default:true', orden_display: 'unsignedTinyInteger default:0', color_ui: 'string:7 nullable', timestamps: timestamps, softdeletes: softDeletes }
+    PlanPrecio: { plan_id: 'id foreign:planes', sede_id: 'id foreign:sedes nullable', precio: 'decimal:10,2', precio_matricula: 'decimal:10,2 default:0', moneda: 'string:3 default:ARS', vigente_desde: date, vigente_hasta: 'date nullable', motivo_cambio: 'string:200 nullable', empleado_id: 'id foreign:empleados', timestamps: timestamps }
+    PlanBeneficio: { plan_id: 'id foreign:planes', descripcion: 'string:200', incluido: 'boolean default:true', orden: 'unsignedTinyInteger default:0', timestamps: timestamps }
+    Promocion: { codigo: 'string:50 unique nullable', nombre: 'string:150', descripcion: 'text nullable', tipo_descuento: 'enum:porcentaje,monto_fijo,meses_gratis', valor: 'decimal:10,2', aplica_a: 'enum:todos,plan_especifico,primera_membresia', plan_id: 'id foreign:planes nullable', sede_id: 'id foreign:sedes nullable', usos_maximos: 'unsignedInteger nullable', usos_actuales: 'unsignedInteger default:0', un_uso_por_socio: 'boolean default:true', vigente_desde: datetime, vigente_hasta: 'datetime nullable', activa: 'boolean default:true', timestamps: timestamps, softdeletes: softDeletes }
+    Socio: { sede_id: 'id foreign:sedes', nombre: 'string:100', apellido: 'string:100', dni: 'string:20 unique', email: 'string:150 unique', telefono: 'string:30 nullable', fecha_nacimiento: 'date nullable', sexo: 'enum:masculino,femenino,otro nullable', direccion: 'string nullable', foto: 'string nullable', numero_socio: 'string:30 unique', referido_por_id: 'unsignedBigInteger nullable', activo: 'boolean default:true', timestamps: timestamps, softdeletes: softDeletes }
+    Membresia: { socio_id: 'id foreign:socios', plan_id: 'id foreign:planes', plan_precio_id: 'id foreign:plan_precios', sede_id: 'id foreign:sedes', fecha_inicio: date, fecha_fin: 'date nullable', clases_restantes: 'unsignedInteger nullable', estado: 'enum:activa,vencida,congelada,cancelada,pendiente_pago default:activa', fecha_congelamiento: 'date nullable', fecha_descongelamiento: 'date nullable', dias_congelados_usados: 'unsignedSmallInteger default:0', veces_congelado: 'unsignedTinyInteger default:0', auto_renovar: 'boolean default:false', notas: 'text nullable', timestamps: timestamps }
+    MetodoPago: { nombre: 'string:60 unique', tipo: 'enum:efectivo,digital,tarjeta,otro', requiere_referencia: 'boolean default:false', activo: 'boolean default:true', timestamps: timestamps }
+    Pago: { membresia_id: 'id foreign:membresias nullable', socio_id: 'id foreign:socios', sede_id: 'id foreign:sedes', empleado_id: 'id foreign:empleados', metodo_pago_id: 'id foreign:metodo_pagos', promocion_id: 'id foreign:promociones nullable', monto_bruto: 'decimal:10,2', monto_descuento: 'decimal:10,2 default:0', monto_matricula: 'decimal:10,2 default:0', monto_final: 'decimal:10,2', moneda: 'string:3 default:ARS', es_pago_parcial: 'boolean default:false', cuota_numero: 'unsignedTinyInteger nullable', cuota_total: 'unsignedTinyInteger nullable', concepto: 'string:200', numero_comprobante: 'string:80 nullable', referencia_externa: 'string:150 nullable', estado: 'enum:pendiente,pagado,anulado,reembolsado default:pagado', fecha_pago: datetime, fecha_vencimiento: 'date nullable', anulado_por_id: 'unsignedBigInteger nullable', motivo_anulacion: 'string:200 nullable', notas: 'text nullable', timestamps: timestamps }
+    PagoItem: { pago_id: 'id foreign:pagos', descripcion: 'string:200', cantidad: 'unsignedSmallInteger default:1', precio_unitario: 'decimal:10,2', subtotal: 'decimal:10,2', timestamps: timestamps }
+    Deuda: { socio_id: 'id foreign:socios', membresia_id: 'id foreign:membresias nullable', sede_id: 'id foreign:sedes', concepto: 'string:200', monto: 'decimal:10,2', fecha_generacion: date, fecha_vencimiento: 'date nullable', estado: 'enum:pendiente,pagada,anulada default:pendiente', pago_id: 'id foreign:pagos nullable', timestamps: timestamps }
+    Caja: { sede_id: 'id foreign:sedes', empleado_id: 'id foreign:empleados', fecha_apertura: datetime, monto_apertura: 'decimal:10,2 default:0', fecha_cierre: 'datetime nullable', monto_cierre_real: 'decimal:10,2 nullable', monto_cierre_sistema: 'decimal:10,2 nullable', diferencia: 'decimal:10,2 nullable', estado: 'enum:abierta,cerrada default:abierta', observaciones: 'text nullable', timestamps: timestamps }
+    MovimientoCaja: { caja_id: 'id foreign:cajas', pago_id: 'id foreign:pagos nullable', tipo: 'enum:ingreso,egreso,ajuste', monto: 'decimal:10,2', concepto: 'string:200', empleado_id: 'id foreign:empleados', timestamps: timestamps }
+    TipoClase: { nombre: 'string:100', descripcion: 'text nullable', duracion_minutos: 'unsignedSmallInteger default:60', capacidad_maxima: unsignedSmallInteger, color: 'string:7 nullable', activo: 'boolean default:true', timestamps: timestamps }
+    Clase: { sede_id: 'id foreign:sedes', tipo_clase_id: 'id foreign:tipo_clases', empleado_id: 'id foreign:empleados', nombre: 'string:150', descripcion: 'text nullable', dia_semana: 'tinyInteger nullable', hora_inicio: time, hora_fin: time, capacidad_maxima: unsignedSmallInteger, es_recurrente: 'boolean default:true', fecha_inicio_vigencia: 'date nullable', fecha_fin_vigencia: 'date nullable', activa: 'boolean default:true', timestamps: timestamps, softdeletes: softDeletes }
+    TurnoClase: { clase_id: 'id foreign:clases', fecha: date, hora_inicio: time, hora_fin: time, instructor_id: 'id foreign:empleados nullable', estado: 'enum:programado,en_curso,finalizado,cancelado default:programado', capacidad_maxima: 'unsignedSmallInteger nullable', notas: 'text nullable', timestamps: timestamps }
+    Reserva: { turno_clase_id: 'id foreign:turno_clases', socio_id: 'id foreign:socios', membresia_id: 'id foreign:membresias nullable', estado: 'enum:reservada,confirmada,asistio,ausente,cancelada default:reservada', fecha_reserva: datetime, fecha_cancelacion: 'datetime nullable', timestamps: timestamps }
+    Asistencia: { socio_id: 'id foreign:socios', sede_id: 'id foreign:sedes', turno_clase_id: 'id foreign:turno_clases nullable', membresia_id: 'id foreign:membresias nullable', fecha_hora_ingreso: datetime, fecha_hora_egreso: 'datetime nullable', tipo: 'enum:clase,acceso_libre', timestamps: timestamps }
+    CategoriaEquipo: { nombre: 'string:80 unique', descripcion: 'string nullable', timestamps: timestamps }
+    Equipo: { sede_id: 'id foreign:sedes', categoria_equipo_id: 'id foreign:categoria_equipos', nombre: 'string:150', marca: 'string:80 nullable', modelo: 'string:80 nullable', numero_serie: 'string:100 nullable unique', fecha_adquisicion: 'date nullable', valor_adquisicion: 'decimal:10,2 nullable', estado: 'enum:operativo,en_mantenimiento,fuera_de_servicio,dado_de_baja default:operativo', ubicacion: 'string:100 nullable', foto: 'string nullable', notas: 'text nullable', timestamps: timestamps, softdeletes: softDeletes }
+    Mantenimiento: { equipo_id: 'id foreign:equipos', empleado_id: 'id foreign:empleados nullable', tipo: 'enum:preventivo,correctivo,revision', descripcion: text, fecha_programada: date, fecha_realizado: 'date nullable', costo: 'decimal:10,2 nullable', proveedor: 'string:150 nullable', estado: 'enum:programado,en_progreso,completado,cancelado default:programado', proxima_revision: 'date nullable', timestamps: timestamps }
+    Alimento: { nombre: 'string:150', calorias_por_100g: 'decimal:7,2 nullable', proteinas_por_100g: 'decimal:7,2 nullable', carbohidratos_por_100g: 'decimal:7,2 nullable', grasas_por_100g: 'decimal:7,2 nullable', fibra_por_100g: 'decimal:7,2 nullable', timestamps: timestamps }
+    PlanNutricional: { socio_id: 'id foreign:socios', empleado_id: 'id foreign:empleados', nombre: 'string:150', objetivo: 'enum:perdida_peso,ganancia_muscular,mantenimiento,rendimiento,otro', descripcion: 'text nullable', fecha_inicio: date, fecha_fin: 'date nullable', activo: 'boolean default:true', timestamps: timestamps }
+    ComidaDiaria: { plan_nutricional_id: 'id foreign:plan_nutricionales', dia_semana: tinyInteger, tipo_comida: 'enum:desayuno,almuerzo,merienda,cena,colacion', hora_sugerida: 'time nullable', notas: 'text nullable', timestamps: timestamps }
+    ComidaAlimento: { comida_diaria_id: 'id foreign:comida_diarias', alimento_id: 'id foreign:alimentos', cantidad_gramos: 'decimal:7,2', timestamps: timestamps }
+    MedicionSocio: { socio_id: 'id foreign:socios', empleado_id: 'id foreign:empleados nullable', fecha: date, peso_kg: 'decimal:5,2 nullable', altura_cm: 'decimal:5,2 nullable', imc: 'decimal:4,2 nullable', porcentaje_grasa: 'decimal:5,2 nullable', masa_muscular_kg: 'decimal:5,2 nullable', cintura_cm: 'decimal:5,2 nullable', cadera_cm: 'decimal:5,2 nullable', pecho_cm: 'decimal:5,2 nullable', notas: 'text nullable', timestamps: timestamps }
+    User: { userable_type: string, userable_id: unsignedBigInteger, email: 'string:150 unique', password: string, email_verified_at: 'timestamp nullable', push_token: 'string nullable', ultimo_login: 'datetime nullable', activo: 'boolean default:true', rememberToken: true, timestamps: timestamps }
+    Notificacion: { user_id: 'id foreign:users', titulo: 'string:150', cuerpo: text, tipo: 'enum:membresia,pago,clase,mantenimiento,promocion,general', leida: 'boolean default:false', leida_at: 'datetime nullable', data: 'json nullable', timestamps: timestamps }

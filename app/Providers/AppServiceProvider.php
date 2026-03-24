@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register(): void
+    {
+        // Core
+        $this->app->bind(\App\Repositories\Contracts\SedeRepositoryInterface::class, \App\Repositories\SedeRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\EmpleadoRepositoryInterface::class, \App\Repositories\EmpleadoRepository::class);
+
+        // Planes y Pricing
+        $this->app->bind(\App\Repositories\Contracts\PlanRepositoryInterface::class, \App\Repositories\PlanRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\PlanPrecioRepositoryInterface::class, \App\Repositories\PlanPrecioRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\PlanBeneficioRepositoryInterface::class, \App\Repositories\PlanBeneficioRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\PromocionRepositoryInterface::class, \App\Repositories\PromocionRepository::class);
+
+        // Socios y Membresías
+        $this->app->bind(\App\Repositories\Contracts\SocioRepositoryInterface::class, \App\Repositories\SocioRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\MembresiaRepositoryInterface::class, \App\Repositories\MembresiaRepository::class);
+
+        // Pagos y Caja
+        $this->app->bind(\App\Repositories\Contracts\PagoRepositoryInterface::class, \App\Repositories\PagoRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\DeudaRepositoryInterface::class, \App\Repositories\DeudaRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\CajaRepositoryInterface::class, \App\Repositories\CajaRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\MetodoPagoRepositoryInterface::class, \App\Repositories\MetodoPagoRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\PagoItemRepositoryInterface::class, \App\Repositories\PagoItemRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\MovimientoCajaRepositoryInterface::class, \App\Repositories\MovimientoCajaRepository::class);
+
+        // Clases y Turnos
+        $this->app->bind(\App\Repositories\Contracts\ClaseRepositoryInterface::class, \App\Repositories\ClaseRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\TurnoClaseRepositoryInterface::class, \App\Repositories\TurnoClaseRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\ReservaRepositoryInterface::class, \App\Repositories\ReservaRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\AsistenciaRepositoryInterface::class, \App\Repositories\AsistenciaRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\TipoClaseRepositoryInterface::class, \App\Repositories\TipoClaseRepository::class);
+
+        // Equipamiento
+        $this->app->bind(\App\Repositories\Contracts\EquipoRepositoryInterface::class, \App\Repositories\EquipoRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\MantenimientoRepositoryInterface::class, \App\Repositories\MantenimientoRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\CategoriaEquipoRepositoryInterface::class, \App\Repositories\CategoriaEquipoRepository::class);
+
+        // Nutrición
+        $this->app->bind(\App\Repositories\Contracts\PlanNutricionalRepositoryInterface::class, \App\Repositories\PlanNutricionalRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\MedicionSocioRepositoryInterface::class, \App\Repositories\MedicionSocioRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\AlimentoRepositoryInterface::class, \App\Repositories\AlimentoRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\ComidaDiariaRepositoryInterface::class, \App\Repositories\ComidaDiariaRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\ComidaAlimentoRepositoryInterface::class, \App\Repositories\ComidaAlimentoRepository::class);
+
+        // Usuarios
+        $this->app->bind(\App\Repositories\Contracts\UserRepositoryInterface::class, \App\Repositories\UserRepository::class);
+        $this->app->bind(\App\Repositories\Contracts\NotificacionRepositoryInterface::class, \App\Repositories\NotificacionRepository::class);
+    }
+
+    public function boot(): void
+    {
+        //
+    }
+}
