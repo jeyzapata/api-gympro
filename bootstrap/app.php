@@ -32,6 +32,12 @@ return Application::configure(basePath: dirname(__DIR__))
                     $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException
                         => response()->json(['success' => false, 'message' => 'Recurso no encontrado.'], 404),
 
+                    $e instanceof \Illuminate\Http\Exceptions\ThrottleRequestsException
+                        => response()->json([
+                            'success' => false,
+                            'message' => 'Demasiados requests. Intentá de nuevo en ' . $e->getHeaders()['Retry-After'] . ' segundos.',
+                        ], 429),
+
                     $e instanceof \Illuminate\Validation\ValidationException
                         => response()->json([
                             'success' => false,

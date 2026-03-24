@@ -58,6 +58,31 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Rate Limiters
+        \Illuminate\Support\Facades\RateLimiter::for('login', function (\Illuminate\Http\Request $request) {
+            $key = 'login|' . $request->ip() . '|' . strtolower($request->string('email')->toString());
+
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)
+                ->by($key)
+                ->response(function () {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Demasiados intentos de login. Intentá de nuevo en un minuto.',
+                    ], 429);
+                });
+        });
+
+        \Illuminate\Support\Facades\RateLimiter::for('api', function (\Illuminate\Http\Request $request) {
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(60)
+                ->by($request->user()?->id ?: $request->ip())
+                ->response(function () {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Límite de requests excedido. Máximo 60 por minuto.',
+                    ], 429);
+                });
+        });
+
         \Dedoc\Scramble\Scramble::configure()
             ->withDocumentTransformers(function (\Dedoc\Scramble\Support\Generator\OpenApi $openApi) {
                 $openApi->secure(

@@ -27,7 +27,7 @@ Route::prefix('v1')->group(function () {
 */
 Route::prefix('v1/auth')->middleware('tenant')->group(function () {
     Route::post('login', [\App\Http\Controllers\Api\V1\AuthController::class, 'login'])
-        ->middleware('throttle:5,1');
+        ->middleware('throttle:login');
 });
 
 Route::prefix('v1/auth')->middleware(['tenant', 'auth:sanctum'])->group(function () {
@@ -43,7 +43,7 @@ Route::prefix('v1/auth')->middleware(['tenant', 'auth:sanctum'])->group(function
 | the users table lives inside the tenant schema.
 |
 */
-Route::prefix('v1')->middleware(['tenant', 'auth:sanctum'])->group(function () {
+Route::prefix('v1')->middleware(['tenant', 'auth:sanctum', 'throttle:api'])->group(function () {
     // Core
     Route::apiResource('sedes', \App\Http\Controllers\Api\V1\SedeController::class);
     Route::apiResource('empleados', \App\Http\Controllers\Api\V1\EmpleadoController::class);
