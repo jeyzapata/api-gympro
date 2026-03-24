@@ -58,6 +58,16 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        \Dedoc\Scramble\Scramble::configure()
+            ->withDocumentTransformers(function (\Dedoc\Scramble\Support\Generator\OpenApi $openApi) {
+                $openApi->secure(
+                    \Dedoc\Scramble\Support\Generator\SecurityScheme::http('bearer', 'JWT')
+                );
+
+                // X-Tenant header parameter
+                $openApi->components->securitySchemes['tenant'] =
+                    \Dedoc\Scramble\Support\Generator\SecurityScheme::apiKey('header', 'X-Tenant')
+                        ->setDescription('Slug del tenant (ej: demo)');
+            });
     }
 }
