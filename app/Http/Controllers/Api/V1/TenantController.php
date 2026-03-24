@@ -5,23 +5,28 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Resources\TenantResource;
-use App\Models\Tenant;
+use App\Services\TenantService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 final class TenantController extends Controller
 {
+    public function __construct(
+        private readonly TenantService $tenantService
+    ) {}
+
     public function index(Request $request): AnonymousResourceCollection
     {
-        $tenants = Tenant::all();
+        $perPage = min($request->integer('per_page', 15), 100);
 
-        return TenantResource::collection($tenants);
+        return TenantResource::collection(
+            $this->tenantService->getAll($perPage)
+        );
     }
 
-    public function show(Request $request, Tenant $tenant): TenantResource
+    public function show(int $id): TenantResource
     {
-        return new TenantResource($tenant);
+        return new TenantResource($this->tenantService->findOrFail($id));
     }
 }

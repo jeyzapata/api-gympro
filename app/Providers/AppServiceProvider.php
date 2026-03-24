@@ -10,6 +10,9 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        // Central
+        $this->app->bind(\App\Repositories\Contracts\TenantRepositoryInterface::class, \App\Repositories\TenantRepository::class);
+
         // Core
         $this->app->bind(\App\Repositories\Contracts\SedeRepositoryInterface::class, \App\Repositories\SedeRepository::class);
         $this->app->bind(\App\Repositories\Contracts\EmpleadoRepositoryInterface::class, \App\Repositories\EmpleadoRepository::class);
