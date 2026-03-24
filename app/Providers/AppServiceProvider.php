@@ -85,13 +85,13 @@ class AppServiceProvider extends ServiceProvider
 
         \Dedoc\Scramble\Scramble::configure()
             ->withOperationTransformers(function (\Dedoc\Scramble\Support\Generator\Operation $operation) {
-                $operation->addParameters([
-                    (new \Dedoc\Scramble\Support\Generator\Parameter('X-Tenant', 'header'))
-                        ->setSchema(\Dedoc\Scramble\Support\Generator\Types\StringType::make())
-                        ->description('Slug del tenant (ej: demo)')
-                        ->required(true)
-                        ->example('demo'),
-                ]);
+                $type = (new \Dedoc\Scramble\Support\Generator\Types\StringType())->example('demo');
+                $schema = \Dedoc\Scramble\Support\Generator\Schema::fromType($type);
+                $parameter = new \Dedoc\Scramble\Support\Generator\Parameter('X-Tenant', 'header');
+                $parameter->setSchema($schema);
+                $parameter->description('Slug del tenant (ej: demo)');
+                $parameter->required(true);
+                $operation->addParameters([$parameter]);
             })
             ->withDocumentTransformers(function (\Dedoc\Scramble\Support\Generator\OpenApi $openApi) {
                 $openApi->secure(
