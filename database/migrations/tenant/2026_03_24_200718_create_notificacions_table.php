@@ -15,7 +15,7 @@ return new class extends Migration
 
         Schema::create('notificacions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('public.users');
+            $table->foreignId('user_id')->constrained();
             $table->string('titulo', 150);
             $table->text('cuerpo');
             $table->enum('tipo', ["membresia","pago","clase","mantenimiento","promocion","general"]);
