@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Plan;
 
 use App\DTOs\Plan\UpdatePlanPayload;
+use App\Enums\TipoPlan;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -19,7 +21,7 @@ final class UpdateRequest extends FormRequest
         return [
             'nombre'                  => ['sometimes', 'string', 'min:2', 'max:100'],
             'descripcion'             => ['sometimes', 'nullable', 'string'],
-            'tipo'                    => ['sometimes', 'string', 'in:fijo,pase_dia,clases_sueltas'],
+            'tipo'                    => ['sometimes', 'string', Rule::enum(TipoPlan::class)],
             'duracion_dias'           => ['sometimes', 'nullable', 'integer', 'min:1', 'required_if:tipo,fijo'],
             'cantidad_clases'         => ['sometimes', 'nullable', 'integer', 'min:1', 'required_if:tipo,clases_sueltas'],
             'permite_congelamiento'   => ['sometimes', 'boolean'],

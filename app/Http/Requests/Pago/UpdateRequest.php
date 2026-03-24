@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Pago;
 
 use App\DTOs\Pago\UpdatePagoPayload;
+use App\Enums\EstadoPago;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -34,7 +36,7 @@ final class UpdateRequest extends FormRequest
             'concepto'            => ['sometimes', 'string', 'max:200'],
             'numero_comprobante'  => ['sometimes', 'nullable', 'string', 'max:80'],
             'referencia_externa'  => ['sometimes', 'nullable', 'string', 'max:150'],
-            'estado'              => ['sometimes', 'string', 'in:pendiente,pagado,anulado,reembolsado'],
+            'estado'              => ['sometimes', 'string', Rule::enum(EstadoPago::class)],
             'fecha_pago'          => ['sometimes', 'date'],
             'fecha_vencimiento'   => ['sometimes', 'nullable', 'date'],
             'anulado_por_id'      => ['sometimes', 'nullable', 'integer', 'gt:0'],

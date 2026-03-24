@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EstadoReserva;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,7 @@ class Reserva extends Model
             'membresia_id' => 'integer',
             'fecha_reserva' => 'datetime',
             'fecha_cancelacion' => 'datetime',
+            'estado' => EstadoReserva::class,
         ];
     }
 

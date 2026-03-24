@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\AplicaPromocion;
+use App\Enums\TipoDescuento;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -55,6 +57,8 @@ class Promocion extends Model
             'vigente_desde' => 'datetime',
             'vigente_hasta' => 'datetime',
             'activa' => 'boolean',
+            'tipo_descuento' => TipoDescuento::class,
+            'aplica_a' => AplicaPromocion::class,
         ];
     }
 

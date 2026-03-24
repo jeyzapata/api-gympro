@@ -1,11 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware(['tenant', 'auth:sanctum']);
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +8,8 @@ Route::get('/user', function (Request $request) {
 |--------------------------------------------------------------------------
 */
 Route::prefix('v1')->group(function () {
-    Route::apiResource('tenants', \App\Http\Controllers\Api\V1\TenantController::class);
+    Route::apiResource('tenants', \App\Http\Controllers\Api\V1\TenantController::class)
+        ->only(['index', 'show']);
 });
 
 /*

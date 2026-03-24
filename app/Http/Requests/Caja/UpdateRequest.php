@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Caja;
 
 use App\DTOs\Caja\UpdateCajaPayload;
+use App\Enums\EstadoCaja;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -25,7 +27,7 @@ final class UpdateRequest extends FormRequest
             'monto_cierre_real'     => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'monto_cierre_sistema'  => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'diferencia'            => ['sometimes', 'nullable', 'numeric'],
-            'estado'                => ['sometimes', 'string', 'in:abierta,cerrada'],
+            'estado'                => ['sometimes', 'string', Rule::enum(EstadoCaja::class)],
             'observaciones'         => ['sometimes', 'nullable', 'string'],
         ];
     }

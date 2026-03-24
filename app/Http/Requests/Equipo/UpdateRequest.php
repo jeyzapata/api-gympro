@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Equipo;
 
 use App\DTOs\Equipo\UpdateEquipoPayload;
+use App\Enums\EstadoEquipo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,7 +27,7 @@ final class UpdateRequest extends FormRequest
             'numero_serie'         => ['nullable', 'string', 'max:100', Rule::unique('equipos', 'numero_serie')->ignore($this->route('equipo'))],
             'fecha_adquisicion'    => ['nullable', 'date'],
             'valor_adquisicion'    => ['nullable', 'numeric', 'min:0'],
-            'estado'               => ['sometimes', 'string', 'in:operativo,en_mantenimiento,fuera_de_servicio,dado_de_baja'],
+            'estado'               => ['sometimes', 'string', Rule::enum(EstadoEquipo::class)],
             'ubicacion'            => ['nullable', 'string', 'max:100'],
             'foto'                 => ['nullable', 'string'],
             'notas'                => ['nullable', 'string'],

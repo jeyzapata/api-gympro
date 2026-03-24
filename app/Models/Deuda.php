@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EstadoDeuda;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,6 +47,7 @@ class Deuda extends Model
             'fecha_generacion' => 'date',
             'fecha_vencimiento' => 'date',
             'pago_id' => 'integer',
+            'estado' => EstadoDeuda::class,
         ];
     }
 

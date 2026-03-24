@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\PlanNutricional;
 
 use App\DTOs\PlanNutricional\StorePlanNutricionalPayload;
+use App\Enums\ObjetivoNutricional;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -20,7 +22,7 @@ final class StoreRequest extends FormRequest
             'socio_id'     => ['required', 'integer', 'exists:socios,id'],
             'empleado_id'  => ['required', 'integer', 'exists:empleados,id'],
             'nombre'       => ['required', 'string', 'max:150'],
-            'objetivo'     => ['required', 'string', 'in:perdida_peso,ganancia_muscular,mantenimiento,rendimiento,otro'],
+            'objetivo'     => ['required', 'string', Rule::enum(ObjetivoNutricional::class)],
             'descripcion'  => ['nullable', 'string'],
             'fecha_inicio' => ['required', 'date'],
             'fecha_fin'    => ['nullable', 'date', 'after:fecha_inicio'],

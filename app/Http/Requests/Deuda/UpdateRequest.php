@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Deuda;
 
 use App\DTOs\Deuda\UpdateDeudaPayload;
+use App\Enums\EstadoDeuda;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ final class UpdateRequest extends FormRequest
             'monto'             => ['sometimes', 'numeric', 'min:0'],
             'fecha_generacion'  => ['sometimes', 'date'],
             'fecha_vencimiento' => ['sometimes', 'nullable', 'date'],
-            'estado'            => ['sometimes', 'string', 'in:pendiente,pagada,anulada'],
+            'estado'            => ['sometimes', 'string', Rule::enum(EstadoDeuda::class)],
             'pago_id'           => ['sometimes', 'nullable', 'integer', 'exists:pagos,id'],
         ];
     }

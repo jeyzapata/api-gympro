@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\TipoComida;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,6 +39,7 @@ class ComidaDiaria extends Model
             'id' => 'integer',
             'plan_nutricional_id' => 'integer',
             'dia_semana' => 'integer',
+            'tipo_comida' => TipoComida::class,
         ];
     }
 

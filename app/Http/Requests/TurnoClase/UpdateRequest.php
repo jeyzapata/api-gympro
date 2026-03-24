@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\TurnoClase;
 
 use App\DTOs\TurnoClase\UpdateTurnoClasePayload;
+use App\Enums\EstadoTurnoClase;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -22,7 +24,7 @@ final class UpdateRequest extends FormRequest
             'hora_inicio'      => ['sometimes', 'date_format:H:i'],
             'hora_fin'         => ['sometimes', 'date_format:H:i', 'after:hora_inicio'],
             'instructor_id'    => ['nullable', 'integer', 'exists:empleados,id'],
-            'estado'           => ['sometimes', 'string', 'in:programado,en_curso,finalizado,cancelado'],
+            'estado'           => ['sometimes', 'string', Rule::enum(EstadoTurnoClase::class)],
             'capacidad_maxima' => ['nullable', 'integer', 'gt:0'],
             'notas'            => ['nullable', 'string'],
         ];

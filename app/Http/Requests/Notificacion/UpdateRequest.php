@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Notificacion;
 
 use App\DTOs\Notificacion\UpdateNotificacionPayload;
+use App\Enums\TipoNotificacion;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -20,7 +22,7 @@ final class UpdateRequest extends FormRequest
             'user_id'  => ['sometimes', 'integer', 'exists:users,id'],
             'titulo'   => ['sometimes', 'string', 'max:150'],
             'cuerpo'   => ['sometimes', 'string'],
-            'tipo'     => ['sometimes', 'string', 'in:membresia,pago,clase,mantenimiento,promocion,general'],
+            'tipo'     => ['sometimes', 'string', Rule::enum(TipoNotificacion::class)],
             'leida'    => ['sometimes', 'boolean'],
             'leida_at' => ['sometimes', 'nullable', 'date'],
             'data'     => ['sometimes', 'nullable', 'json'],

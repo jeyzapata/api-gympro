@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EstadoTurnoClase;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,7 @@ class TurnoClase extends Model
             'fecha' => 'date',
             'instructor_id' => 'integer',
             'capacidad_maxima' => 'integer',
+            'estado' => EstadoTurnoClase::class,
         ];
     }
 

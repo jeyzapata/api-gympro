@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\TipoAsistencia;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,7 @@ class Asistencia extends Model
             'membresia_id' => 'integer',
             'fecha_hora_ingreso' => 'datetime',
             'fecha_hora_egreso' => 'datetime',
+            'tipo' => TipoAsistencia::class,
         ];
     }
 

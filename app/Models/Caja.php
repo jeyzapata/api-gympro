@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EstadoCaja;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,6 +50,7 @@ class Caja extends Model
             'monto_cierre_real' => 'decimal:2',
             'monto_cierre_sistema' => 'decimal:2',
             'diferencia' => 'decimal:2',
+            'estado' => EstadoCaja::class,
         ];
     }
 

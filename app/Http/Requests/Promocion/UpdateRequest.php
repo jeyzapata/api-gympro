@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Promocion;
 
 use App\DTOs\Promocion\UpdatePromocionPayload;
+use App\Enums\AplicaPromocion;
+use App\Enums\TipoDescuento;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -21,9 +23,9 @@ final class UpdateRequest extends FormRequest
             'codigo'          => ['sometimes', 'nullable', 'string', 'max:50', Rule::unique('promocions', 'codigo')->ignore($this->route('promocion'))],
             'nombre'          => ['sometimes', 'string', 'min:2', 'max:150'],
             'descripcion'     => ['sometimes', 'nullable', 'string'],
-            'tipo_descuento'  => ['sometimes', 'string', 'in:porcentaje,monto_fijo,meses_gratis'],
+            'tipo_descuento'  => ['sometimes', 'string', Rule::enum(TipoDescuento::class)],
             'valor'           => ['sometimes', 'numeric', 'min:0'],
-            'aplica_a'        => ['sometimes', 'string', 'in:todos,plan_especifico,primera_membresia'],
+            'aplica_a'        => ['sometimes', 'string', Rule::enum(AplicaPromocion::class)],
             'plan_id'         => ['sometimes', 'nullable', 'integer', 'exists:planes,id'],
             'sede_id'         => ['sometimes', 'nullable', 'integer', 'exists:sedes,id'],
             'usos_maximos'    => ['sometimes', 'nullable', 'integer', 'min:1'],

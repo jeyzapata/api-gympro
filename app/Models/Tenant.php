@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\PlanSuscripcion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,7 +17,7 @@ use Stancl\Tenancy\Database\Concerns\HasInternalKeys;
 use Stancl\Tenancy\Database\TenantCollection;
 use Stancl\Tenancy\Events;
 
-final class Tenant extends Model implements TenantWithDatabase
+class Tenant extends Model implements TenantWithDatabase
 {
     use CentralConnection,
         HasDatabase,
@@ -80,6 +81,7 @@ final class Tenant extends Model implements TenantWithDatabase
             'max_empleados' => 'integer',
             'max_socios' => 'integer',
             'datos_fiscales' => 'array',
+            'plan_suscripcion' => PlanSuscripcion::class,
         ];
     }
 

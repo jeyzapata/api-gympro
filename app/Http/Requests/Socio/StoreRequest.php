@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Socio;
 
 use App\DTOs\Socio\StoreSocioPayload;
+use App\Enums\Sexo;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ final class StoreRequest extends FormRequest
             'email'            => ['required', 'email:rfc,dns', 'max:150', 'unique:socios,email'],
             'telefono'         => ['nullable', 'string', 'max:30'],
             'fecha_nacimiento' => ['nullable', 'date', 'before:today'],
-            'sexo'             => ['nullable', 'string', 'in:masculino,femenino,otro'],
+            'sexo'             => ['nullable', 'string', Rule::enum(Sexo::class)],
             'direccion'        => ['nullable', 'string', 'max:255'],
             'foto'             => ['nullable', 'string', 'max:255'],
             'numero_socio'     => ['required', 'string', 'max:30', 'unique:socios,numero_socio'],

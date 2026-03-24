@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EstadoMantenimiento;
+use App\Enums\TipoMantenimiento;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,6 +48,8 @@ class Mantenimiento extends Model
             'fecha_realizado' => 'date',
             'costo' => 'decimal:2',
             'proxima_revision' => 'date',
+            'tipo' => TipoMantenimiento::class,
+            'estado' => EstadoMantenimiento::class,
         ];
     }
 

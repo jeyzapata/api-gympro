@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Plan;
 
 use App\DTOs\Plan\StorePlanPayload;
+use App\Enums\TipoPlan;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -19,7 +21,7 @@ final class StoreRequest extends FormRequest
         return [
             'nombre'                  => ['required', 'string', 'min:2', 'max:100'],
             'descripcion'             => ['nullable', 'string'],
-            'tipo'                    => ['required', 'string', 'in:fijo,pase_dia,clases_sueltas'],
+            'tipo'                    => ['required', 'string', Rule::enum(TipoPlan::class)],
             'duracion_dias'           => ['nullable', 'integer', 'min:1', 'required_if:tipo,fijo'],
             'cantidad_clases'         => ['nullable', 'integer', 'min:1', 'required_if:tipo,clases_sueltas'],
             'permite_congelamiento'   => ['sometimes', 'boolean'],

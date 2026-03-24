@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Requests\Promocion;
 
 use App\DTOs\Promocion\StorePromocionPayload;
+use App\Enums\AplicaPromocion;
+use App\Enums\TipoDescuento;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -20,9 +23,9 @@ final class StoreRequest extends FormRequest
             'codigo'          => ['nullable', 'string', 'max:50', 'unique:promocions,codigo'],
             'nombre'          => ['required', 'string', 'min:2', 'max:150'],
             'descripcion'     => ['nullable', 'string'],
-            'tipo_descuento'  => ['required', 'string', 'in:porcentaje,monto_fijo,meses_gratis'],
+            'tipo_descuento'  => ['required', 'string', Rule::enum(TipoDescuento::class)],
             'valor'           => ['required', 'numeric', 'min:0'],
-            'aplica_a'        => ['required', 'string', 'in:todos,plan_especifico,primera_membresia'],
+            'aplica_a'        => ['required', 'string', Rule::enum(AplicaPromocion::class)],
             'plan_id'         => ['nullable', 'integer', 'exists:planes,id', 'required_if:aplica_a,plan_especifico'],
             'sede_id'         => ['nullable', 'integer', 'exists:sedes,id'],
             'usos_maximos'    => ['nullable', 'integer', 'min:1'],

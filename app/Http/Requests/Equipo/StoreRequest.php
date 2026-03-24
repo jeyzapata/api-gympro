@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Equipo;
 
 use App\DTOs\Equipo\StoreEquipoPayload;
+use App\Enums\EstadoEquipo;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -25,7 +27,7 @@ final class StoreRequest extends FormRequest
             'numero_serie'         => ['nullable', 'string', 'max:100', 'unique:equipos,numero_serie'],
             'fecha_adquisicion'    => ['nullable', 'date'],
             'valor_adquisicion'    => ['nullable', 'numeric', 'min:0'],
-            'estado'               => ['sometimes', 'string', 'in:operativo,en_mantenimiento,fuera_de_servicio,dado_de_baja'],
+            'estado'               => ['sometimes', 'string', Rule::enum(EstadoEquipo::class)],
             'ubicacion'            => ['nullable', 'string', 'max:100'],
             'foto'                 => ['nullable', 'string'],
             'notas'                => ['nullable', 'string'],

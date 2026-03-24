@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Pago;
 
 use App\DTOs\Pago\StorePagoPayload;
+use App\Enums\EstadoPago;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -34,7 +36,7 @@ final class StoreRequest extends FormRequest
             'concepto'            => ['required', 'string', 'max:200'],
             'numero_comprobante'  => ['nullable', 'string', 'max:80'],
             'referencia_externa'  => ['nullable', 'string', 'max:150'],
-            'estado'              => ['sometimes', 'string', 'in:pendiente,pagado,anulado,reembolsado'],
+            'estado'              => ['sometimes', 'string', Rule::enum(EstadoPago::class)],
             'fecha_pago'          => ['required', 'date'],
             'fecha_vencimiento'   => ['nullable', 'date'],
             'anulado_por_id'      => ['nullable', 'integer', 'gt:0'],

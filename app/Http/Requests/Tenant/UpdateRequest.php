@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Tenant;
 
+use App\Enums\PlanSuscripcion;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -28,7 +30,7 @@ final class UpdateRequest extends FormRequest
             'telefono' => ['nullable', 'string', 'max:30'],
             'logo' => ['nullable', 'string'],
             'schema_name' => ['required', 'string', 'max:80', 'unique:tenants,schema_name'],
-            'plan_suscripcion' => ['required', 'in:trial,basico,pro,enterprise'],
+            'plan_suscripcion' => ['required', Rule::enum(PlanSuscripcion::class)],
             'trial_ends_at' => ['nullable'],
             'suscripcion_activa' => ['required'],
             'max_sedes' => ['required', 'integer', 'gt:0'],

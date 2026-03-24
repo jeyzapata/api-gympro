@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\TipoNotificacion;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,7 @@ class Notificacion extends Model
             'leida' => 'boolean',
             'leida_at' => 'datetime',
             'data' => 'array',
+            'tipo' => TipoNotificacion::class,
         ];
     }
 

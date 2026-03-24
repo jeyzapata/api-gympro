@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Membresia;
 
 use App\DTOs\Membresia\UpdateMembresiaPayload;
+use App\Enums\EstadoMembresia;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ final class UpdateRequest extends FormRequest
             'fecha_inicio'            => ['sometimes', 'date'],
             'fecha_fin'               => ['sometimes', 'nullable', 'date', 'after:fecha_inicio'],
             'clases_restantes'        => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'estado'                  => ['sometimes', 'string', 'in:activa,vencida,congelada,cancelada,pendiente_pago'],
+            'estado'                  => ['sometimes', 'string', Rule::enum(EstadoMembresia::class)],
             'fecha_congelamiento'     => ['sometimes', 'nullable', 'date'],
             'fecha_descongelamiento'  => ['sometimes', 'nullable', 'date', 'after:fecha_congelamiento'],
             'dias_congelados_usados'  => ['sometimes', 'integer', 'min:0'],

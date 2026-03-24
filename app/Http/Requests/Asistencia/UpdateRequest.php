@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Asistencia;
 
 use App\DTOs\Asistencia\UpdateAsistenciaPayload;
+use App\Enums\TipoAsistencia;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -23,7 +25,7 @@ final class UpdateRequest extends FormRequest
             'membresia_id'        => ['sometimes', 'nullable', 'integer', 'exists:membresias,id'],
             'fecha_hora_ingreso'  => ['sometimes', 'date'],
             'fecha_hora_egreso'   => ['sometimes', 'nullable', 'date', 'after:fecha_hora_ingreso'],
-            'tipo'                => ['sometimes', 'string', 'in:clase,acceso_libre'],
+            'tipo'                => ['sometimes', 'string', Rule::enum(TipoAsistencia::class)],
         ];
     }
 

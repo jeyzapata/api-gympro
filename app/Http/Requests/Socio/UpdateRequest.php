@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Socio;
 
 use App\DTOs\Socio\UpdateSocioPayload;
+use App\Enums\Sexo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +28,7 @@ final class UpdateRequest extends FormRequest
             'email'            => ['sometimes', 'email:rfc,dns', 'max:150', Rule::unique('socios', 'email')->ignore($socioId)],
             'telefono'         => ['nullable', 'string', 'max:30'],
             'fecha_nacimiento' => ['nullable', 'date', 'before:today'],
-            'sexo'             => ['nullable', 'string', 'in:masculino,femenino,otro'],
+            'sexo'             => ['nullable', 'string', Rule::enum(Sexo::class)],
             'direccion'        => ['nullable', 'string', 'max:255'],
             'foto'             => ['nullable', 'string', 'max:255'],
             'numero_socio'     => ['sometimes', 'string', 'max:30', Rule::unique('socios', 'numero_socio')->ignore($socioId)],

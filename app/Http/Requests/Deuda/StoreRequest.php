@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Deuda;
 
 use App\DTOs\Deuda\StoreDeudaPayload;
+use App\Enums\EstadoDeuda;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -24,7 +26,7 @@ final class StoreRequest extends FormRequest
             'monto'             => ['required', 'numeric', 'min:0'],
             'fecha_generacion'  => ['required', 'date'],
             'fecha_vencimiento' => ['nullable', 'date', 'after_or_equal:fecha_generacion'],
-            'estado'            => ['sometimes', 'string', 'in:pendiente,pagada,anulada'],
+            'estado'            => ['sometimes', 'string', Rule::enum(EstadoDeuda::class)],
             'pago_id'           => ['nullable', 'integer', 'exists:pagos,id'],
         ];
     }

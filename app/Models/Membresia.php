@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EstadoMembresia;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -57,6 +58,7 @@ class Membresia extends Model
             'dias_congelados_usados' => 'integer',
             'veces_congelado' => 'integer',
             'auto_renovar' => 'boolean',
+            'estado' => EstadoMembresia::class,
         ];
     }
 

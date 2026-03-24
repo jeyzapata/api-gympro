@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Asistencia;
 
 use App\DTOs\Asistencia\StoreAsistenciaPayload;
+use App\Enums\TipoAsistencia;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -23,7 +25,7 @@ final class StoreRequest extends FormRequest
             'membresia_id'        => ['nullable', 'integer', 'exists:membresias,id'],
             'fecha_hora_ingreso'  => ['required', 'date'],
             'fecha_hora_egreso'   => ['nullable', 'date', 'after:fecha_hora_ingreso'],
-            'tipo'                => ['required', 'string', 'in:clase,acceso_libre'],
+            'tipo'                => ['required', 'string', Rule::enum(TipoAsistencia::class)],
         ];
     }
 

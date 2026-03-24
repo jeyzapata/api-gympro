@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EstadoEquipo;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -48,6 +49,7 @@ class Equipo extends Model
             'categoria_equipo_id' => 'integer',
             'fecha_adquisicion' => 'date',
             'valor_adquisicion' => 'decimal:2',
+            'estado' => EstadoEquipo::class,
         ];
     }
 

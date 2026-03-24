@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Sexo;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,6 +50,7 @@ class Socio extends Model
             'fecha_nacimiento' => 'date',
             'referido_por_id' => 'integer',
             'activo' => 'boolean',
+            'sexo' => Sexo::class,
         ];
     }
 

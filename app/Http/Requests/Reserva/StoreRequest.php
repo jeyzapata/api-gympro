@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Reserva;
 
 use App\DTOs\Reserva\StoreReservaPayload;
+use App\Enums\EstadoReserva;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -20,7 +22,7 @@ final class StoreRequest extends FormRequest
             'turno_clase_id'    => ['required', 'integer', 'exists:turno_clases,id'],
             'socio_id'          => ['required', 'integer', 'exists:socios,id'],
             'membresia_id'      => ['nullable', 'integer', 'exists:membresias,id'],
-            'estado'            => ['sometimes', 'string', 'in:reservada,confirmada,asistio,ausente,cancelada'],
+            'estado'            => ['sometimes', 'string', Rule::enum(EstadoReserva::class)],
             'fecha_reserva'     => ['required', 'date'],
             'fecha_cancelacion' => ['nullable', 'date'],
         ];

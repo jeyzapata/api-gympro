@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\TipoPlan;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -51,6 +52,7 @@ class Plan extends Model
             'permite_acceso_multisede' => 'boolean',
             'activo' => 'boolean',
             'orden_display' => 'integer',
+            'tipo' => TipoPlan::class,
         ];
     }
 

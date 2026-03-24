@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Requests\Mantenimiento;
 
 use App\DTOs\Mantenimiento\UpdateMantenimientoPayload;
+use App\Enums\EstadoMantenimiento;
+use App\Enums\TipoMantenimiento;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class UpdateRequest extends FormRequest
 {
@@ -19,13 +22,13 @@ final class UpdateRequest extends FormRequest
         return [
             'equipo_id'        => ['sometimes', 'integer', 'exists:equipos,id'],
             'empleado_id'      => ['sometimes', 'nullable', 'integer', 'exists:empleados,id'],
-            'tipo'             => ['sometimes', 'in:preventivo,correctivo,revision'],
+            'tipo'             => ['sometimes', Rule::enum(TipoMantenimiento::class)],
             'descripcion'      => ['sometimes', 'string'],
             'fecha_programada' => ['sometimes', 'date'],
             'fecha_realizado'  => ['sometimes', 'nullable', 'date'],
             'costo'            => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'proveedor'        => ['sometimes', 'nullable', 'string', 'max:150'],
-            'estado'           => ['sometimes', 'in:programado,en_progreso,completado,cancelado'],
+            'estado'           => ['sometimes', Rule::enum(EstadoMantenimiento::class)],
             'proxima_revision' => ['sometimes', 'nullable', 'date'],
         ];
     }

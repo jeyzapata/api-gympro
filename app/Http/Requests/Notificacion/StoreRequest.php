@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests\Notificacion;
 
 use App\DTOs\Notificacion\StoreNotificacionPayload;
+use App\Enums\TipoNotificacion;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 final class StoreRequest extends FormRequest
 {
@@ -20,7 +22,7 @@ final class StoreRequest extends FormRequest
             'user_id'  => ['required', 'integer', 'exists:users,id'],
             'titulo'   => ['required', 'string', 'max:150'],
             'cuerpo'   => ['required', 'string'],
-            'tipo'     => ['required', 'string', 'in:membresia,pago,clase,mantenimiento,promocion,general'],
+            'tipo'     => ['required', 'string', Rule::enum(TipoNotificacion::class)],
             'leida'    => ['sometimes', 'boolean'],
             'leida_at' => ['nullable', 'date'],
             'data'     => ['nullable', 'json'],
