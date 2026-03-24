@@ -2,28 +2,16 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
 |--------------------------------------------------------------------------
 |
-| Here you can register the tenant routes for your application.
-| These routes are loaded by the TenantRouteServiceProvider.
+| This file is intentionally empty. GymPro uses header-based tenant
+| identification (X-Tenant) via InitializeTenancy middleware,
+| NOT domain-based identification.
 |
-| Feel free to customize them however you want. Good luck!
+| All tenant-scoped routes are defined in routes/api.php under
+| the 'tenant' middleware group.
 |
 */
-
-Route::middleware([
-    'web',
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
-    Route::get('/', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
-    });
-});
