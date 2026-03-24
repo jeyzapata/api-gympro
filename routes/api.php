@@ -31,6 +31,7 @@ Route::prefix('v1/auth')->middleware('tenant')->group(function () {
 });
 
 Route::prefix('v1/auth')->middleware(['tenant', 'auth:sanctum'])->group(function () {
+    Route::get('me', [\App\Http\Controllers\Api\V1\AuthController::class, 'me']);
     Route::post('logout', [\App\Http\Controllers\Api\V1\AuthController::class, 'logout']);
 });
 

@@ -33,6 +33,11 @@ final class AuthController extends Controller
         ], 'Login exitoso.');
     }
 
+    public function me(): UserResource
+    {
+        return new UserResource(auth()->user()->load('userable'));
+    }
+
     public function logout(): JsonResponse
     {
         auth()->user()->currentAccessToken()->delete();
