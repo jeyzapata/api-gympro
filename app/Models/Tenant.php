@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\CentralConnection;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
+use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Concerns\HasInternalKeys;
 use Stancl\Tenancy\Database\TenantCollection;
 use Stancl\Tenancy\Events;
@@ -19,6 +20,7 @@ final class Tenant extends Model implements TenantWithDatabase
 {
     use CentralConnection,
         HasDatabase,
+        HasDomains,
         HasFactory,
         HasInternalKeys,
         SoftDeletes;
