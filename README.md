@@ -172,3 +172,7 @@ Lo que falta, dicho de frente:
 - El módulo de pagos no tiene integración con pasarela todavía. `referencia_externa` está previsto para IDs de MercadoPago.
 - Falta definir si `Promocion` necesita restricción por método de pago.
 
+
+## Licencia
+
+[MIT](LICENSE)
