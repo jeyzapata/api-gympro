@@ -39,6 +39,8 @@ final class TenantIsolationTest extends TestCase
             );
         }
 
+        $this->purgeTestTenants();
+
         // Creating a Tenant fires TenantCreated, which runs CreateDatabase
         // and MigrateDatabase synchronously (see TenancyServiceProvider).
         $this->gymA = $this->makeTenant('gym-isolation-a', 'gym_isolation_a');
@@ -48,11 +50,7 @@ final class TenantIsolationTest extends TestCase
     protected function tearDown(): void
     {
         tenancy()->end();
-
-        // Deleting the tenant fires DeleteDatabase, which drops the schema.
-        foreach ([$this->gymA ?? null, $this->gymB ?? null] as $tenant) {
-            $tenant?->delete();
-        }
+        $this->purgeTestTenants();
 
         parent::tearDown();
     }
@@ -115,6 +113,24 @@ final class TenantIsolationTest extends TestCase
         $this->assertStringNotContainsString('gym_isolation_a', $this->currentSearchPath());
     }
 
+    /**
+     * Tenant uses SoftDeletes, so delete() would leave the row behind and the
+     * unique slug would collide on the next test. Drop the schemas and remove
+     * the rows for good.
+     */
+    private function purgeTestTenants(): void
+    {
+        $central = DB::connection('central');
+
+        foreach (['gym_isolation_a', 'gym_isolation_b'] as $schema) {
+            $central->statement("DROP SCHEMA IF EXISTS {$schema} CASCADE");
+        }
+
+        Tenant::withTrashed()
+            ->whereIn('slug', ['gym-isolation-a', 'gym-isolation-b'])
+            ->forceDelete();
+    }
+
     private function makeTenant(string $slug, string $schemaName): Tenant
     {
         return Tenant::create([
@@ -132,8 +148,13 @@ final class TenantIsolationTest extends TestCase
         ]);
     }
 
+    /**
+     * While tenancy is active the DEFAULT connection is the 'tenant' one, and
+     * that is where PostgreSQLSchemaManager sets the search_path. The 'pgsql'
+     * connection is only the template and stays on 'public'.
+     */
     private function currentSearchPath(): string
     {
-        return (string) DB::connection('pgsql')->select('SHOW search_path')[0]->search_path;
+        return (string) DB::connection()->select('SHOW search_path')[0]->search_path;
     }
 }
