@@ -160,6 +160,8 @@ Tests:
 composer test
 ```
 
+Los tests corren sobre **PostgreSQL**, no SQLite: el aislamiento entre tenants depende de los schemas y del `search_path`, que SQLite no tiene. Correrlos sobre SQLite daría verde sin probar nada.
+
 ---
 
 ## Estado del proyecto
@@ -168,7 +170,7 @@ Proyecto personal, en desarrollo. El schema de datos y la arquitectura multi-ten
 
 Lo que falta, dicho de frente:
 
-- Los tests de controllers son stubs generados por Blueprint — verifican que la ruta responde, no que el comportamiento sea correcto. El test de aislamiento entre tenants es la prioridad.
+- La cobertura es chica a propósito: `TenantIsolationTest` verifica la garantía central — que un gimnasio no pueda leer los datos de otro. Los stubs que había generado Blueprint se eliminaron: apuntaban a un namespace viejo y sus aserciones (`assertJsonStructure([])`) no verificaban comportamiento.
 - El módulo de pagos no tiene integración con pasarela todavía. `referencia_externa` está previsto para IDs de MercadoPago.
 - Falta definir si `Promocion` necesita restricción por método de pago.
 
