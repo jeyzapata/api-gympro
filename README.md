@@ -1,58 +1,174 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GymPro API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API REST multi-tenant para administración de gimnasios. Cada gimnasio corre aislado en su propio schema de PostgreSQL.
 
-## About Laravel
+![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?style=flat-square&logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat-square&logo=laravel&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## El problema
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Un SaaS para gimnasios tiene que garantizar que el gimnasio A jamás vea los datos del gimnasio B. En un sistema con socios, pagos, deudas y mediciones corporales, una fuga de datos entre clientes no es un bug: es el fin del producto.
 
-## Learning Laravel
+La pregunta de arquitectura, entonces, es **dónde vive esa garantía**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## La decisión: un schema de Postgres por tenant
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+GymPro usa **shared database / schema por tenant**, gestionado con [`stancl/tenancy`](https://tenancyforlaravel.com/).
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Cada gimnasio tiene un `schema_name` en la tabla `tenants` (schema `public`), por ejemplo `gym_elgriego`. En cada request HTTP y en cada job de cola se ejecuta, antes de cualquier query:
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```sql
+SET search_path TO gym_elgriego, public;
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Por qué no una columna `tenant_id`
 
-## Contributing
+Es la opción más común, y es la que se cae en producción.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Con `tenant_id`, el aislamiento depende de que **toda** query lleve el scope correcto. Un Global Scope que se olvida, un `DB::raw()` apurado, un join mal escrito — y un cliente ve los datos de otro. La garantía vive en la disciplina del equipo, que es el peor lugar donde ponerla.
 
-## Code of Conduct
+Con schemas separados, **Postgres garantiza el aislamiento a nivel de motor**. Una query mal escrita no puede alcanzar datos de otro tenant, porque esos datos no están en el `search_path`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Por qué no subdominios
 
-## Security Vulnerabilities
+`stancl/tenancy` identifica tenants por dominio por defecto. GymPro no lo usa.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Los subdominios traen certificados SSL wildcard, configuración de DNS por cliente y complejidad en el router. El aislamiento real que aportan sobre esta estrategia es **cero**: el schema ya lo resuelve.
 
-## License
+En su lugar, el tenant se identifica por **login** y por el header `X-Tenant`. Todos entran por la misma URL.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Capas de protección
+
+El schema es la garantía principal, pero no la única:
+
+1. **Middleware `tenant`** — setea el `search_path` antes de cualquier query. Corre **antes** de `auth:sanctum`, porque la tabla `users` vive dentro del schema del tenant.
+2. **Trait `BelongsToTenant`** — lanza excepción si se intenta escribir sin tenant seteado.
+3. **Jobs con tenant explícito** — los jobs de cola y comandos Artisan reciben el tenant como parámetro, nunca lo heredan del contexto.
+4. **Test de aislamiento** — dos tenants, insertar en uno, verificar que el otro no ve nada.
+
+## Flujo de un request
+
+```
+POST /api/v1/socios
+  │
+  ├─ Header: X-Tenant: gym-elgriego
+  │
+  ├─ middleware 'tenant'
+  │    └─ SET search_path TO gym_elgriego, public
+  │
+  ├─ middleware 'auth:sanctum'
+  │    └─ busca el user DENTRO del schema del tenant
+  │
+  └─ SocioController → StoreRequest → Service → Model
+```
+
+El orden de los middleware no es un detalle: invertirlo rompe el login, porque Sanctum buscaría el usuario en el schema equivocado.
+
+---
+
+## Estructura
+
+El proyecto separa responsabilidades por capa:
+
+```
+app/
+├── Http/Controllers/Api/V1/   HTTP: recibe y responde
+│   └── Admin/                 gestión de la plataforma (schema public)
+├── Http/Requests/             validación de entrada
+├── Http/Resources/            forma de la respuesta
+├── Services/                  lógica de negocio
+├── Repositories/              acceso a datos
+├── DTOs/                      payloads tipados entre capas
+├── Models/
+└── Enums/                     estados del dominio, tipados
+```
+
+Los controllers no tienen lógica de negocio: reciben un Request validado, lo pasan a un Service y devuelven un Resource.
+
+## Superficie de la API
+
+**Central** (schema `public`, sin tenant)
+```
+GET  /api/v1/tenants
+```
+
+**Admin de plataforma** (`auth:admin`) — gestión del SaaS: tenants, planes de plataforma, facturas y pagos de suscripción.
+
+**Tenant** (header `X-Tenant` + `auth:sanctum`) — el dominio del gimnasio:
+
+| Módulo | Recursos |
+|---|---|
+| Socios | `socios`, `membresias`, `medicion-socios`, `asistencias` |
+| Pricing | `planes`, `plan-precios`, `plan-beneficios`, `promociones` |
+| Cobranza | `pagos`, `deudas`, `cajas` |
+| Operación | `sedes`, `empleados`, `equipos`, `mantenimientos` |
+| Clases | `clases`, `turno-clases`, `reservas` |
+| Nutrición | `plan-nutricionales` |
+
+### Decisiones del dominio que vale la pena mirar
+
+- **`PlanPrecio`** — los precios nunca se sobreescriben. Se cierra el vigente con `vigente_hasta` y se crea uno nuevo. Así se sabe el precio exacto al que se firmó cada membresía, aunque la lista haya cambiado cinco veces.
+- **`Pago`** — separa `monto_bruto`, `monto_descuento`, `monto_matricula` y `monto_final`. Un total sin desglose no se puede auditar.
+- **`Caja`** — `monto_cierre_real` (lo que hay físicamente) contra `monto_cierre_sistema`. La diferencia es justamente el dato que importa.
+
+## Documentación de la API
+
+La documentación OpenAPI se genera sola desde el código con [Scramble](https://scramble.dedoc.co/), a partir de los Form Requests y los Resources.
+
+```
+/docs/api
+```
+
+No hay un archivo OpenAPI mantenido a mano, así que no se desactualiza.
+
+---
+
+## Stack
+
+| | |
+|---|---|
+| PHP | 8.3 |
+| Laravel | 13 |
+| Base de datos | PostgreSQL (schema por tenant) |
+| Multi-tenancy | `stancl/tenancy` 3.10 |
+| Autenticación | Laravel Sanctum 4 |
+| Docs | `dedoc/scramble` |
+| Scaffolding | `laravel-shift/blueprint` |
+
+## Instalación
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+Configurar la conexión a PostgreSQL en `.env` y después:
+
+```bash
+php artisan migrate        # schema public: tenants, suscripciones
+php artisan tenants:migrate # schema de cada tenant
+php artisan serve
+```
+
+Tests:
+
+```bash
+composer test
+```
+
+---
+
+## Estado del proyecto
+
+Proyecto personal, en desarrollo. El schema de datos y la arquitectura multi-tenant están definidos y funcionando; el resto avanza por módulos.
+
+Lo que falta, dicho de frente:
+
+- Los tests de controllers son stubs generados por Blueprint — verifican que la ruta responde, no que el comportamiento sea correcto. El test de aislamiento entre tenants es la prioridad.
+- El módulo de pagos no tiene integración con pasarela todavía. `referencia_externa` está previsto para IDs de MercadoPago.
+- Falta definir si `Promocion` necesita restricción por método de pago.
+
